@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head></h:head>
+<h:body>
+	<h:form>
+		<rich:panel header="Choix match / gardien" id="editPanel">
+			<h:panelGrid columns="2" style="width:100%;">
+
+				<rich:panel style="text-align:center">
+					<f:facet name="header">
+						<h:outputText value="Sélectionnez un match: " />
+					</f:facet>
+					<rich:select enableManualInput="true"
+						defaultLabel="Commencez à écrire ici"
+						value="#{viewBean.selectedMatch}" style="width:350px">
+						<f:selectItems value="#{applicationBean.collMatchs}" />
+						<f:converter converterId="MatchConverter" />
+						<a4j:ajax render="chartsPanel" event="selectitem"
+							listener="#{viewBean.updateCharts}" />
+					</rich:select>
+				</rich:panel>
+
+				<rich:panel style="text-align:center">
+					<f:facet name="header">
+						<h:outputText value="Sélectionnez un gardien " />
+					</f:facet>
+					<rich:select enableManualInput="true"
+						defaultLabel="Commencez à écrire ici"
+						value="#{viewBean.selectedGardien}" style="width:350px">
+						<f:selectItems value="#{applicationBean.collGardiens}" />
+						<f:converter converterId="GardienConverter" />
+						<a4j:ajax render="chartsPanel" event="selectitem"
+							listener="#{viewBean.updateCharts}" />
+					</rich:select>
+				</rich:panel>
+			</h:panelGrid>
+		</rich:panel>
+
+		<rich:tabPanel id="chartsPanel">
+			<rich:tab header="Stats pour le match">
+				<rich:collapsiblePanel header="Panel des lancers" expanded="false">
+					<rich:chart id="lancersByZoneTir" title="Lancers par zone de tir">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre de lancers" />
+						<rich:chartXAxis label="Zones de tir" />
+						<a4j:repeat value="#{viewBean.lancersParZoneTir}" var="lancer">
+							<rich:chartSeries label="#{lancer.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{lancer.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<rich:chart id="lancersByZoneArret" title="Lancers par zone d'arrêt">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre de lancers" />
+						<rich:chartXAxis label="Zones d'arrêt" />
+						<a4j:repeat value="#{viewBean.lancersParZoneArret}" var="lancer">
+							<rich:chartSeries label="#{lancer.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{lancer.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<h3 style="text-align: center">
+						<h:outputText
+							value="Nombre total de lancers: #{viewBean.nbTotalLancers}" />
+					</h3>
+				</rich:collapsiblePanel>
+		
+				<rich:collapsiblePanel header="Panel des arrêts" expanded="false">
+					<rich:chart id="arretsByZoneTir" title="Arrets par zone de tir">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre d'arrêts" />
+						<rich:chartXAxis label="Zones de tir" />
+						<a4j:repeat value="#{viewBean.arretsParZoneTir}" var="arret">
+							<rich:chartSeries label="#{arret.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{arret.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<rich:chart id="arretsByZoneArret" title="Arrets par zone d'arrêt">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre d'arrêts" />
+						<rich:chartXAxis label="Zones d'arrêt" />
+						<a4j:repeat value="#{viewBean.arretsParZoneArret}" var="arret">
+							<rich:chartSeries label="#{arret.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{arret.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<h3 style="text-align: center">
+						<h:outputText
+							value="Nombre total d'arrets: #{viewBean.nbTotalArrets}" />
+					</h3>
+				</rich:collapsiblePanel>
+		
+		
+				<rich:collapsiblePanel header="Panel des statistiques"
+					expanded="false">
+		
+					<rich:chart id="pie" title="Pourcentage arrêts">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartSeries data="#{viewBean.pie}" type="pie" />
+					</rich:chart>
+		
+				</rich:collapsiblePanel>
+			</rich:tab>
+			
+			<rich:tab header="Stats pour la saison">
+				<rich:collapsiblePanel header="Panel des lancers" expanded="false">
+					<rich:chart id="globalLancersByZoneTir" title="Lancers par zone de tir">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre de lancers" />
+						<rich:chartXAxis label="Zones de tir" />
+						<a4j:repeat value="#{viewBean.globalLancersParZoneTir}" var="lancer">
+							<rich:chartSeries label="#{lancer.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{lancer.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<rich:chart id="globalLancersByZoneArret" title="Lancers par zone d'arrêt">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre de lancers" />
+						<rich:chartXAxis label="Zones d'arrêt" />
+						<a4j:repeat value="#{viewBean.globalLancersParZoneArret}" var="lancer">
+							<rich:chartSeries label="#{lancer.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{lancer.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<h3 style="text-align: center">
+						<h:outputText
+							value="Nombre total de lancers: #{viewBean.globalNbTotalLancers}" />
+					</h3>
+				</rich:collapsiblePanel>
+		
+				<rich:collapsiblePanel header="Panel des arrêts" expanded="false">
+					<rich:chart id="globalArretsByZoneTir" title="Arrets par zone de tir">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre d'arrêts" />
+						<rich:chartXAxis label="Zones de tir" />
+						<a4j:repeat value="#{viewBean.globalArretsParZoneTir}" var="arret">
+							<rich:chartSeries label="#{arret.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{arret.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<rich:chart id="globalArretsByZoneArret" title="Arrets par zone d'arrêt">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartYAxis label="Nombre d'arrêts" />
+						<rich:chartXAxis label="Zones d'arrêt" />
+						<a4j:repeat value="#{viewBean.globalArretsParZoneArret}" var="arret">
+							<rich:chartSeries label="#{arret.zoneName}" type="bar">
+								<rich:chartPoint x="0" y="#{arret.amount}" />
+							</rich:chartSeries>
+						</a4j:repeat>
+					</rich:chart>
+		
+					<h3 style="text-align: center">
+						<h:outputText
+							value="Nombre total d'arrets: #{viewBean.globalNbTotalArrets}" />
+					</h3>
+				</rich:collapsiblePanel>
+		
+		
+				<rich:collapsiblePanel header="Panel des statistiques"
+					expanded="false">
+		
+					<rich:chart id="globalPie" title="Pourcentage arrêts">
+						<rich:chartLegend sorting="ascending" />
+						<rich:chartSeries data="#{viewBean.globalPie}" type="pie" />
+					</rich:chart>
+		
+				</rich:collapsiblePanel>
+			</rich:tab>
+			
+		</rich:tabPanel>
+
+	</h:form>
+</h:body>
+</html>
